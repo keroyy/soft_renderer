@@ -35,6 +35,21 @@ void FrameBuffer::Cover(int x, int y, Vec4 vec) {
     }
 
 } 
+
+void FrameBuffer::resize(int w, int h) {
+    width = w;
+    height = h;
+
+    // 重建深度缓冲向量
+    m_depthBuffer.clear();
+    m_depthBuffer.reserve(width * height);
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            m_depthBuffer.push_back(1.0);
+        }
+    }
+}
+
 void FrameBuffer::setDepthBuffer(VertexOut zBuffer) {
     //unsigned int xx = static_cast<unsigned int>(zBuffer.screenPos.x), yy = static_cast<unsigned int>(zBuffer.screenPos.y);
     unsigned int xx = zBuffer.screenPos.x, yy = zBuffer.screenPos.y;

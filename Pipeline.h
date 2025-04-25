@@ -35,6 +35,11 @@ public:
 	void swapBuffer();
 	unsigned char* output() { return m_frontBuffer->getColorBuffer(); } // 返还front缓冲区指针
 
+	/**
+	 * @brief 动态调整管线和缓冲区尺寸
+	 */
+	void resize(int w, int h);
+
 	// 光栅化
 	VertexOut lerp(const VertexOut n1, const VertexOut n2, float weight);
 	void bresenham(const VertexOut from, const VertexOut to);

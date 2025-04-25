@@ -31,10 +31,10 @@
     <QtUic Include="mainwindow.ui">
       <Filter>Forms</Filter>
     </QtUic>
-    <QtMoc Include="mainwindow.h">
+    <QtMoc Include="MainWindow.h">
       <Filter>Headers</Filter>
     </QtMoc>
-    <ClCompile Include="mainwindow.cpp">
+    <ClCompile Include="MainWindow.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

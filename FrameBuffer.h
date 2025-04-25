@@ -51,4 +51,6 @@ public:
 	void clearDepthBuffer();
 	double getDepth(const unsigned int& x, const unsigned int& y)const;
 	void drawDepth(const unsigned int& x, const unsigned int& y, const double& value);
+
+	void resize(int w, int h);
 };

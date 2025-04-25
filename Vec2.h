@@ -26,5 +26,8 @@ public:
 	Vec2 operator+() const;
 	Vec2 operator-() const;
 
+	// Support scalar * Vec2
+	friend Vec2 operator*(float k, const Vec2& vec);
+
 	Vec2 Vec2::lerp(const Vec2& vec, float weight)const;
 };

@@ -3,12 +3,12 @@
 #include "Matrix.h"
 #include "stdio.h"
 
-MainCamera::MainCamera() {
+MainCamera::MainCamera(int w, int h) {
 	pos = Vec3(0, 0, 3);
 	target = Vec3(0, 0, 0);
 	up = Vec3(0, 1, 0);
 	fov = 45 * 3.14 / 180.f;
-	asp = 1280 / 768.f;
+	asp = static_cast<float>(w) / h;
 	near = 1.f;
 	far = 50.f;
 }

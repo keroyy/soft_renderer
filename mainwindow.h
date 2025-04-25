@@ -6,13 +6,13 @@
 #include <QThread>
 #include "RenderRoute.h"
 
-class mainwindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    mainwindow(QWidget *parent = nullptr);
-    ~mainwindow();
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
     /***************************************************************
       接受从renderRoute中发射的front的缓存数据
@@ -22,6 +22,9 @@ protected slots: // 槽
 
 private:
     void paintEvent(QPaintEvent *)override;
+
+private:
+    void resizeEvent(QResizeEvent* event)override;
 
 private:
     Ui::mainwindowClass *ui;

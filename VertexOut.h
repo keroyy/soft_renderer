@@ -13,7 +13,7 @@ public:
 	Vec2 texcoord;
 	Vec3 normal;
 	Vec4 color;
-	double oneDivZ;// 深度测试指标
+	double oneDivZ;// 深度测试指标 w分量的倒数，用于透视矫正
 	VertexOut() :worldPos(), projPos(), texcoord(), normal(), color(), oneDivZ(1.0){}
 	VertexOut(Vec4 wpos, Vec4 ppos, Vec2 tex, Vec3 nor, Vec4 col, double oZ) :
 		worldPos(wpos), projPos(ppos), texcoord(tex), normal(nor), color(col), oneDivZ(oZ) {}

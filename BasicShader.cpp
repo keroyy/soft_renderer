@@ -7,7 +7,7 @@ BasicShader::BasicShader()
 	viewMatrix.normalize();
 	projectMatrix.normalize();
 	texture = new Textures();
-	texture->loadImage("D:/Resources/textures/container.jpg");
+	texture->loadImage("./textures/container.jpg");
 }
 
 void BasicShader::setCamera(Vec3 pos, Vec3 target, Vec3 up, float fov, float asp, float near, float far)
@@ -23,7 +23,7 @@ VertexOut BasicShader::vertexShader(const Vertex in) {
 	ret.projPos = projectMatrix * temp;
 	ret.color = in.color;
 	ret.normal = in.normal;
-	ret.oneDivZ = 1.0;
+	ret.oneDivZ = 1.0f / ret.projPos.w;
 	ret.texcoord = in.texcoord;
 	//ret.textureName = in.textureName;
 	return ret;

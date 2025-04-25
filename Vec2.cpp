@@ -69,6 +69,9 @@ Vec2 Vec2::operator-() const {
 	Vec2 res(-x, -y);
 	return res;
 }
+Vec2 operator*(float k, const Vec2& vec) {
+	return Vec2(vec.x * k, vec.y * k);
+}
 Vec2 Vec2::lerp(const Vec2& vec, float weight)const {
 	Vec2 res;
 	res.x = (1 - weight) * x + weight * vec.x;

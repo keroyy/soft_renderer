@@ -7,7 +7,7 @@ public:
 	Vec3 pos, target, up; // target:相机看向的目标点  up:相机自身z轴方向
 	float fov, asp, near, far;
 public:
-	MainCamera();
+	MainCamera(int w, int h);
 	/***************************************************************
 	* @param pos, target, up, fov, asp, near, far
 	 **************************************************************/

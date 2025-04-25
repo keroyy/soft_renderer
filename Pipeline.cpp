@@ -21,6 +21,17 @@ void Pipeline::initialize() {
 	m_shader = new BasicShader();
 }
 
+void Pipeline::resize(int w, int h) {
+	width = w;
+	height = h;
+	if (m_frontBuffer) {
+		m_frontBuffer->resize(width, height);
+	}
+	if (m_backBuffer) {
+		m_backBuffer->resize(width, height);
+	}
+}
+
 void Pipeline::drawIndex(RenderMode mode, MainCamera *camera) {
 	if (m_indices.empty())return;
 	m_shader->setCamera(camera->pos, camera->target, camera->up, camera->fov, camera->asp, camera->near, camera->far);
@@ -116,7 +127,7 @@ VertexOut Pipeline::lerp(const VertexOut n1, const VertexOut n2, float weight) {
 	result.color= n1.color.lerp(n2.color, weight);
 	result.normal= n1.normal.lerp(n2.normal, weight);
 	result.texcoord = n1.texcoord.lerp(n2.texcoord, weight);
-	//result.oneDivZ = (1.0 - weight) * n1.oneDivZ + weight * n2.oneDivZ;
+	result.oneDivZ = (1.0 - weight) * n1.oneDivZ + weight * n2.oneDivZ;
 	return result;
 }
 
@@ -186,6 +197,16 @@ void Pipeline::scanLinePerRow(const VertexOut left, const VertexOut right) {
 	for (int i = 0; i <= length; i++) {
 		// linear interpolation
 		double weight = static_cast<double>(i) / length;
+
+		// 插值得到当前顶点的 oneDivZ
+		float currentOneDivZ = (1.0f - weight) * left.oneDivZ + weight * right.oneDivZ;
+
+		// 手动计算透视校正后的 texcoord
+		Vec2 texcoord = (
+			(1.0f - weight) * left.texcoord * left.oneDivZ +
+			weight * right.texcoord * right.oneDivZ
+			) / currentOneDivZ;
+
 		current = lerp(left, right, weight);
 		current.screenPos.x = left.screenPos.x + i;
 		current.screenPos.y = left.screenPos.y;
@@ -230,11 +251,25 @@ void Pipeline::rasterTopTriangle(VertexOut v1, VertexOut v2, VertexOut v3) {
 	for (int i = 0; i < dy; ++i)
 	{
 		double weight = 0;
-		if (dy != 0)
+		if (dy != 0) {
 			weight = static_cast<double>(i) / dy;
+		}
+
 		newleft = lerp(left, dest, weight);
 		newright = lerp(right, dest, weight);
+
+		// 手动修正 texcoord
+		newleft.texcoord = (
+			(1.0f - weight) * left.texcoord * left.oneDivZ +
+			weight * dest.texcoord * dest.oneDivZ
+			) / newleft.oneDivZ;
+		newright.texcoord = (
+			(1.0f - weight) * right.texcoord * right.oneDivZ +
+			weight * dest.texcoord * dest.oneDivZ
+			) / newright.oneDivZ;
+
 		newleft.screenPos.y = newright.screenPos.y = left.screenPos.y - i;
+
 		scanLinePerRow(newleft, newright);
 	}
 }
@@ -256,11 +291,24 @@ void Pipeline::rasterBottomTriangle(VertexOut v1, VertexOut v2, VertexOut v3) {
 	for (int i = 0; i < dy; ++i)
 	{
 		double weight = 0;
-		if (dy != 0)
+		if (dy != 0) {
 			weight = static_cast<double>(i) / dy;
+		}
 		newleft = lerp(left, dest, weight);
 		newright = lerp(right, dest, weight);
+
+		// 手动修正 texcoord
+		newleft.texcoord = (
+			(1.0f - weight) * left.texcoord * left.oneDivZ +
+			weight * dest.texcoord * dest.oneDivZ
+			) / newleft.oneDivZ;
+		newright.texcoord = (
+			(1.0f - weight) * right.texcoord * right.oneDivZ +
+			weight * dest.texcoord * dest.oneDivZ
+			) / newright.oneDivZ;
+
 		newleft.screenPos.y = newright.screenPos.y = left.screenPos.y + i;
+
 		scanLinePerRow(newleft, newright);
 	}
 }

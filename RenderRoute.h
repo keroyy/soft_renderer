@@ -1,6 +1,7 @@
 #pragma once
 #include "QObject"
 #include "Pipeline.h"
+#include <QMutex>
 /***************************************************************
 	  渲染循环，它的作用主要有两部分:
 	  第一是储存待渲染的对象，然后逐步调用渲染管线类中的方法完成渲染；
@@ -9,6 +10,8 @@
 class RenderRoute :public QObject
 {
 	Q_OBJECT
+private:
+	QMutex mutex; // 互斥锁
 public:
 	explicit RenderRoute(int w, int h, QObject* parent = nullptr);
 	~RenderRoute() {}
@@ -17,8 +20,10 @@ signals:
 	void frameOut(unsigned char* image);
 public slots:
 	void loop();
+	void setSize(int w, int h);
 private:
 	bool stopped;
 	int width, height, channel; // 宽、高、通道数
 	Pipeline* pipeline;
+	MainCamera* camera;
 };
